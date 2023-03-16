@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Matt Dray">
+<meta name="dcterms.date" content="2023-03-16">
 
-<title>R parsing playground</title>
+<title>WebR Parse Test</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -74,14 +76,26 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">R parsing playground</h1>
+<h1 class="title">WebR Parse Test</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Matt Dray </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 16, 2023</p>
+    </div>
+  </div>
   
     
   </div>
@@ -89,6 +103,8 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<section id="interactive-parsing" class="level1">
+<h1>Interactive parsing</h1>
 <p>First we can define a function, <code>parse_out()</code>, that uses <code>parse()</code> and <code>getParseData()</code> and returns the parsed tokens from an input string.</p>
 <p>Click ‘Run code’ to declare the function and execute the example.</p>
 <p>Change the value of <code>r_string</code> and click ‘Run code’ to see the new result.</p>
@@ -176,13 +192,20 @@ parse_string(r_string)`,
 </script>
 
 </div>
-<hr>
+</section>
+<section id="purpose" class="level1">
+<h1>Purpose</h1>
 <p>This is a test of:</p>
 <ul>
 <li>using WebR to R code R in the browser, thanks to George Stagg and Lionel Henry’s <a href="https://github.com/r-wasm/webr/">r-wasm/webr</a></li>
-<li>using ‘webr’ chunks in a Quarto document, thanks to James J Balamuta’s <a href="https://github.com/coatless/quarto-webr">coatless/quarto-webr</a>.</li>
+<li>using ‘webr’ chunks in a Quarto document, thanks to James J Balamuta’s <a href="https://github.com/coatless/quarto-webr">coatless/quarto-webr</a></li>
+<li>making the page available on the web via <a href="https://docs.netlify.com/site-deploys/create-deploys/">a Netlify manual deploy</a></li>
 </ul>
-<p>You can find <a href="https://github.com/matt-dray/webr-parse-test">the source code on GitHub</a>.</p>
+</section>
+<section id="source" class="level1">
+<h1>Source</h1>
+<p>You can find <a href="https://github.com/matt-dray/webr-parse-test">the source code for this page on GitHub</a>.</p>
+</section>
 
 </main>
 <!-- /main column -->
