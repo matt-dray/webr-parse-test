@@ -9,7 +9,7 @@
 <meta name="author" content="Matt Dray">
 <meta name="dcterms.date" content="2023-03-16">
 
-<title>WebR Parse Test</title>
+<title>A Parsing Playground for R Code</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -76,7 +76,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">WebR Parse Test</h1>
+<h1 class="title">A Parsing Playground for R Code</h1>
+<p class="subtitle lead">A test of WebR chunks in Quarto</p>
 </div>
 
 
@@ -103,11 +104,10 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="interactive-parsing" class="level1">
-<h1>Interactive parsing</h1>
-<p>First we can define a function, <code>parse_out()</code>, that uses <code>parse()</code> and <code>getParseData()</code> and returns the parsed tokens from an input string.</p>
+<section id="parse-the-test" class="level2">
+<h2 class="anchored" data-anchor-id="parse-the-test">Parse the test</h2>
+<p>The simple function below helps expose R’s fundamental ‘tokens’. I <a href="https://www.rostrum.blog/2023/03/03/getparsedata/">wrote recently</a> about parsing R in this way.</p>
 <p>Click ‘Run code’ to declare the function and execute the example.</p>
-<p>Change the value of <code>r_string</code> and click ‘Run code’ to see the new result.</p>
 <div class="cell">
 <button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-1">Loading webR...</button>
 <div id="webr-editor-1"></div>
@@ -127,8 +127,85 @@ ul.task-list li input[type="checkbox"] {
   p[p$text != "", c("text", "token")]
 }
 
-r_string <- "x <- 1"  # change this string
+parse_string("x <- mtcars[mtcars$cyl == 4, ]")`,
+    lineNumbers: true,
+    mode: "r",
+    theme: "light default",
+    viewportMargin: Infinity,
+  });
 
+  runButton.onclick = async () => {
+    runButton.disabled = true;
+    let canvas = undefined;
+    await globalThis.webR.init();
+    await webR.evalRVoid("canvas(width=504, height=360)");
+    const result = await webRCodeShelter.captureR(editor.getValue(), {
+      withAutoprint: true,
+      captureStreams: true,
+      captureConditions: false,
+      env: webR.objs.emptyEnv,
+    });
+    try {
+      await webR.evalRVoid("dev.off()");
+      const out = result.output.filter(
+        evt => evt.type == "stdout" || evt.type == "stderr"
+      ).map((evt) => evt.data).join("\n");
+
+      const msgs = await webR.flush();
+      msgs.forEach(msg => {
+        if (msg.type === "canvasExec"){
+          if (!canvas) {
+            canvas = document.createElement("canvas");
+            canvas.setAttribute("width", 2 * 504);
+            canvas.setAttribute("height", 2 * 360);
+            canvas.style.width="700px";
+            canvas.style.display="block";
+            canvas.style.margin="auto";
+          }
+          Function(`this.getContext("2d").${msg.data}`).bind(canvas)();
+        }
+      });
+
+      outputDiv.innerHTML = "";
+      const pre = document.createElement("pre");
+      if (/\S/.test(out)) {
+        const code = document.createElement("code");
+        code.innerText = out;
+        pre.appendChild(code);
+      } else {
+        pre.style.visibility = "hidden";
+      }
+      outputDiv.appendChild(pre);
+
+      if (canvas) {
+        const p = document.createElement("p");
+        p.appendChild(canvas);
+        outputDiv.appendChild(p);
+      }
+    } finally {
+      webRCodeShelter.purge();
+      runButton.disabled = false;
+    }
+  }
+</script>
+
+</div>
+<p>Now it’s your turn. Change the value of <code>r_string</code> below to a valid line of R code and then click ‘Run code’.</p>
+<div class="cell">
+<button class="btn btn-default btn-webr" disabled="" type="button" id="webr-run-button-2">Loading webR...</button>
+<div id="webr-editor-2"></div>
+<div id="webr-code-output-2"><pre style="visibility: hidden"></pre></div>
+<script type="module">
+  const runButton = document.getElementById("webr-run-button-2");
+  const outputDiv = document.getElementById("webr-code-output-2");
+  const editorDiv = document.getElementById("webr-editor-2");
+
+  const editor = CodeMirror((elt) => {
+    elt.style.border = "1px solid #eee";
+    elt.style.height = "auto";
+    editorDiv.append(elt);
+  },{
+    value: `r_string <- "x <- 1"  # change the string
 parse_string(r_string)`,
     lineNumbers: true,
     mode: "r",
@@ -192,19 +269,17 @@ parse_string(r_string)`,
 </script>
 
 </div>
+<p>You can keep changing the value of <code>r_string</code> and pressing ‘Run code’ to see the effect.</p>
 </section>
-<section id="purpose" class="level1">
-<h1>Purpose</h1>
+<section id="details" class="level2">
+<h2 class="anchored" data-anchor-id="details">Details</h2>
 <p>This is a test of:</p>
 <ul>
-<li>using WebR to run R in the browser, thanks to George Stagg and Lionel Henry’s <a href="https://github.com/r-wasm/webr/">r-wasm/webr</a></li>
-<li>using ‘webr’ chunks in a Quarto document, thanks to James J Balamuta’s <a href="https://github.com/coatless/quarto-webr">coatless/quarto-webr</a></li>
-<li>making the page available on the web via <a href="https://docs.netlify.com/site-deploys/create-deploys/">a Netlify manual deploy</a></li>
+<li><a href="https://github.com/r-wasm/webr/">WebR</a> to run R in the browser, thanks to George Stagg and Lionel Henry</li>
+<li><a href="https://github.com/coatless/quarto-webr">‘webr’ chunks in Quarto</a>, thanks to James J Balamuta</li>
+<li>deploying this type of page via <a href="https://docs.netlify.com/site-deploys/create-deploys/">Netlify</a></li>
 </ul>
-</section>
-<section id="source" class="level1">
-<h1>Source</h1>
-<p>You can find <a href="https://github.com/matt-dray/webr-parse-test">the source code for this page on GitHub</a>.</p>
+<p>You can find the source code for this page <a href="https://github.com/matt-dray/webr-parse-test">on GitHub</a>.</p>
 </section>
 
 </main>
