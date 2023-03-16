@@ -12,6 +12,6 @@ You can see the live document here: [https://webr-parse-test.netlify.app](https:
 
 This is a test of:
 
-* using WebR to R code R in the browser, thanks to George Stagg and Lionel Henry's [r-wasm/webr](https://github.com/r-wasm/webr/)
+* using WebR to run R in the browser, thanks to George Stagg and Lionel Henry's [r-wasm/webr](https://github.com/r-wasm/webr/)
 * using 'webr' chunks in a Quarto document, thanks to James J Balamuta's [coatless/quarto-webr](https://github.com/coatless/quarto-webr)
 * making the page available on the web via [a Netlify manual deploy](https://docs.netlify.com/site-deploys/create-deploys/)
