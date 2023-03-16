@@ -1,0 +1,33 @@
+---
+title: "R parsing playground"
+format: html
+engine: knitr
+filters:
+  - webr
+---
+
+First we can define a function, `parse_out()`, that uses `parse()` and `getParseData()` and returns the parsed tokens from an input string.
+
+Click 'Run code' to declare the function and execute the example.
+
+Change the value of `r_string` and click 'Run code' to see the new result.
+
+```{webr}
+parse_string <- function(string) {
+  p <- getParseData(parse(text = string))
+  p[p$text != "", c("text", "token")]
+}
+
+r_string <- "x <- subset(mtcars, cyl == 4)"
+
+parse_string(r_string)
+```
+
+---
+
+This is a test of:
+
+* using WebR to R code R in the browser, thanks to George Stagg and Lionel Henry's [r-wasm/webr](https://github.com/r-wasm/webr/)
+* using 'webr' chunks in a Quarto document, thanks to James J Balamuta's [coatless/quarto-webr](https://github.com/coatless/quarto-webr).
+
+You can find [the source code on GitHub](https://github.com/matt-dray/webr-parse-test).
